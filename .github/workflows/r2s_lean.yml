@@ -13,7 +13,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: github.repository == 'zming66/'
+    if: github.repository == 'zming66/r2s_lean'
 
     steps:
 
