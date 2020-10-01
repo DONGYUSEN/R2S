@@ -63,8 +63,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@master
         with:
-        name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM
-        path: ./artifact.zip
+         name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM
+         path: ./artifact.zip
         
  #     - name: Assemble Artifact
  #       id: assemble_artifact
