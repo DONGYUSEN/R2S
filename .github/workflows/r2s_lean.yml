@@ -13,7 +13,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: github.repository == 'zming66/r2s_lean'
+    if: github.repository == 'zming66/nanopi-openwrt'
 
     steps:
 
@@ -55,22 +55,16 @@ jobs:
           git apply ../../enable_autocore.diff
           sed -i 's/@LINUX_5_4//' package/lean/luci-app-flowoffload/Makefile
           . ../../5_mods.sh
-          mv ../../check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
-          mv ../../autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
+          mv ../../scripts/check_wan4.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/check_wan4.sh &' package/base-files/files/etc/rc.local
+          mv ../../scripts/autoupdate.sh package/base-files/files/root/au.sh && chmod +x package/base-files/files/root/au.sh
       - name: Build FriendlyWrt
         run: . 4_build_image.sh friendlywrt-rk3328 nanopi_r2s.mk
-        
-      - name: Upload Artifact
-        uses: actions/upload-artifact@master
-        with:
-         name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM
-         path: ./artifact.zip
-        
+
       - name: Assemble Artifact
         id: assemble_artifact
         run: |
           . x_assemble_artifact.sh
-          release_tag="zm$(date +%Y-%m-%d)"
+          release_tag="R2S-Lean-$(date +%Y-%m-%d)"
           echo "##[set-output name=release_tag;]$release_tag"
       - name: Create Release
         id: create_release
@@ -89,7 +83,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.sec_token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-  
           asset_path: ./artifact.zip
           asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM.zip
           asset_content_type: application/zip
