@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/r2s_native-dev.yml'
+      - '.github/workflows/native.yml'
   schedule:
     - cron: '10 08 * * *'
 
@@ -13,7 +13,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: github.repository == 'zsming66/r2s_lean'
+    if: github.repository == 'zming66/r2s_lean'
 
     steps:
 
