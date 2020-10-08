@@ -29,8 +29,8 @@ jobs:
 
       - name: Clone Source
         run: |
-          git clone -b master https://git.openwrt.org/openwrt/openwrt.git openwrt
-          #git clone https://github.com/project-openwrt/openwrt --depth=1 -b openwrt-18.06-k5.4
+          #git clone -b master https://git.openwrt.org/openwrt/openwrt.git openwrt
+          git clone https://github.com/project-openwrt/openwrt --depth=1 -b openwrt-18.06-k5.4
           #git clone https://github.com/openwrt/openwrt --depth=1 oopenwrt
           #cd oopenwrt && echo 'package/boot/arm-trusted-firmware-rockchip
           #package/boot/uboot-rockchip
@@ -48,7 +48,7 @@ jobs:
           cat ../minimal_config.seed >> .config
           echo -e 'CONFIG_PACKAGE_kmod-mt7601u=y\n' >> .config
           sed -i 's/option input\t\tREJECT/option input\t\tACCEPT/' package/network/config/firewall/files/firewall.config
-          #echo -e '\nDYC Build\n' >> package/lean/default-settings/files/openwrt_banner
+          echo -e '\nDYC Build\n' >> package/lean/default-settings/files/openwrt_banner
 
       - name: Compile
         run: |
