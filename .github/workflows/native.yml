@@ -35,7 +35,7 @@ jobs:
           cd oopenwrt && echo 'package/boot/arm-trusted-firmware-rockchip
           package/boot/uboot-rockchip
           target/linux/rockchip
-          package/base-files/files/lib/functions/system.sh' | xargs -n1 -i cp -a --parents {} ../openwrt/
+          package/base-files/files/lib/functions/system.sh' | xargs -n1 -i cp -a ../openwrt/
 
       - name: Setup Configuration
         run: |
