@@ -30,12 +30,12 @@ jobs:
       - name: Clone Source
         run: |
           #git clone -b master https://git.openwrt.org/openwrt/openwrt.git openwrt
-          git clone https://github.com/project-openwrt/openwrt --depth=1 -b openwrt-18.06-k5.4
-          #git clone https://github.com/openwrt/openwrt --depth=1 oopenwrt
-          #cd oopenwrt && echo 'package/boot/arm-trusted-firmware-rockchip
-          #package/boot/uboot-rockchip
-          #target/linux/rockchip
-          #package/base-files/files/lib/functions/system.sh' | xargs -n1 -i cp -a --parents {} ../openwrt/
+          #git clone https://github.com/project-openwrt/openwrt --depth=1 -b openwrt-18.06-k5.4
+          git clone https://github.com/openwrt/openwrt --depth=1 oopenwrt
+          cd oopenwrt && echo 'package/boot/arm-trusted-firmware-rockchip
+          package/boot/uboot-rockchip
+          target/linux/rockchip
+          package/base-files/files/lib/functions/system.sh' | xargs -n1 -i cp -a --parents {} ../openwrt/
 
       - name: Setup Configuration
         run: |
