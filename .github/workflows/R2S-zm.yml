@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/native.yml'
+      - '.github/workflows/R2S-zm.yml'
   schedule:
     - cron: '10 08 * * *'
 
