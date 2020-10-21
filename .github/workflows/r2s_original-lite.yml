@@ -33,10 +33,11 @@ jobs:
         with:
           ref: master
 
-      - name: Initialization Environment
-         env:
+     - name: Initialization Environment
+        env:
           DEBIAN_FRONTEND: noninteractive
         run: . 1_initialization_environment.sh
+
           
       - name: Install Repo
         run: |
