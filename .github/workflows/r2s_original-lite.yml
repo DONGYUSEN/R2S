@@ -33,7 +33,7 @@ jobs:
         with:
           ref: master
 
-     - name: Initialization Environment
+      - name: Initialization Environment
         env:
           DEBIAN_FRONTEND: noninteractive
         run: . 1_initialization_environment.sh
