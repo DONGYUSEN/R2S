@@ -45,16 +45,22 @@ jobs:
       
       - name: Setup Configuration
         run: |
-          cd openwrt
-          echo 'CONFIG_TARGET_rockchip=y
-          CONFIG_TARGET_rockchip_armv8=y
-          CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
-          CONFIG_PACKAGE_kmod-rtl8821cu=y' > .config
-          cat ../base_rk3328.seed >> .config
-          cat ../minimal_config.seed >> .config
-          echo -e 'CONFIG_PACKAGE_kmod-mt7601u=y\n' >> .config
-          sed -i 's/option input\t\tREJECT/option input\t\tACCEPT/' package/network/config/firewall/files/firewall.config
-          echo -e '\nDYC Build\n' >> package/lean/default-settings/files/openwrt_banner
+            cd friendlywrt-rk3328
+          #. ../remove_unused_config.sh
+          . ../patch_dosth.sh
+          #sed -i 's/CONFIG_BPFILTER=y/CONFIG_BPFILTER=n/' kernel/arch/arm64/configs/nanopi-r2_linux_defconfig
+          sed -i 's/dnsmasq /dnsmasq-full /' friendlywrt/include/target.mk
+          [ -f configs/config_rk3328 ] && sed -i '/adblock/d;/docker/d;/DOCKER/d;/mwan3/d;/OPENVPN/d;/openvpn/d;' configs/config_rk3328
+          cat ../JUNK/r2s_original2_base.conf >> configs/config_rk3328
+          cat ../JUNK/r2s_original2_kmod.conf >> configs/config_rk3328
+          cat ../JUNK/r2s_original2_base_snapshot.conf >> configs/config_rk3328
+          cat ../JUNK/r2s_original2_user_little.conf >> configs/config_rk3328
+          cd friendlywrt
+          mv ../../scripts/one_time_init.sh package/base-files/files/usr/bin && sed -i '/exit/i\/bin/sh /usr/bin/one_time_init.sh 24 &' package/base-files/files/etc/rc.local
+          mv ../../scripts/flash_rom.sh package/base-files/files/root/flash_rom.sh && chmod +x package/base-files/files/root/flash_rom.sh
+          . ../../scripts/add-for-statusview.sh
+          . ../../scripts/buildtime.sh
+          rm -f ./feeds.conf.default && wget -O ./feeds.conf.default https://raw.githubusercontent.com/kongfl888/OpenWrt4R2S/master/JUNK/feeds.conf.default
       
       - name: Update Feeds
         run: |
@@ -66,13 +72,15 @@ jobs:
           git clone -b openwrt-19.07 --single-branch https://github.com/project-openwrt/openwrt.git
           . ./scripts/original-package.sh 34
       
-      - name: Compile
+      - name: Build FriendlyWrt
         run: |
-          cd openwrt
-          ./scripts/feeds update -a && ./scripts/feeds install -a
-          make defconfig
-          make download -j8
-          make -j$(($(nproc) + 1)) -s
+          cd friendlywrt-rk3328
+          . ../scripts/rename_sdimg.sh 24 || echo ""
+          sed -i 's/set -eu/set -u/' scripts/mk-friendlywrt.sh
+          ./build.sh nanopi_r2s.mk
+      - name: Zip Files
+        run: |
+          gzip friendlywrt-rk3328/out/*.img
       - name: Assemble Artifact
         id: assemble_artifact
         run: |
