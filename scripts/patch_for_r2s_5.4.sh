@@ -10,10 +10,10 @@ if [ "${1}" == "1" ]; then
     snapshot=1
 fi
 
-cd friendlywrt-rk3328
+cd openwrt
 
 if [ "$snapshot" == "1" ]; then
-    cd friendlywrt
+    cd openwrt
     kernelver=`cat ./include/kernel-version.mk | grep "LINUX_VERSION-5.4" | cut -d"." -f3`
     if [ $kernelver -lt 70 ]; then
         git remote add upkernel https://github.com/graysky2/openwrt.git && git fetch upkernel newk
