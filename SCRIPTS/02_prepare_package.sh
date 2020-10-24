@@ -288,6 +288,8 @@ svn co https://github.com/openwrt/packages/trunk/libs/nghttp2 package/libs/nghtt
 svn co https://github.com/openwrt/packages/trunk/libs/libcap-ng package/libs/libcap-ng
 rm -rf ./feeds/packages/utils/collectd
 svn co https://github.com/openwrt/packages/trunk/utils/collectd feeds/packages/utils/collectd
+#kcpufreq
+git clone -b master --single-branch https://github.com/kongfl888/luci-app-kcpufreq.git $wrtpackage/luci-app-kcpufreq
 #FullCone模块
 cp -rf ../openwrt-lienol/package/network/fullconenat ./package/network/fullconenat
 #git clone -b master --single-branch https://github.com/QiuSimons/openwrt-fullconenat package/fullconenat
