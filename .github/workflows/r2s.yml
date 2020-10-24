@@ -33,25 +33,53 @@ jobs:
           cp -r ./SCRIPTS/. ./
           /bin/bash 01_get_ready.sh
           
-      - name: Setup Configuration
+      - name: Prepare Package
         run: |
           cd openwrt
-          echo 'CONFIG_TARGET_rockchip=y
-          CONFIG_TARGET_rockchip_armv8=y
-          CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
-          CONFIG_PACKAGE_kmod-rtl8821cu=y' > .config
-          cat ../base_rk3328.seed >> .config
-          cat ../minimal_config.seed >> .config
-          echo -e 'CONFIG_PACKAGE_kmod-mt7601u=y\n' >> .config
-          sed -i 's/option input\t\tREJECT/option input\t\tACCEPT/' package/network/config/firewall/files/firewall.config
-          echo -e '\nDYC Build\n' >> package/lean/default-settings/files/openwrt_banner
-      - name: Compile
+          cp -r ../SCRIPTS/. ./
+          /bin/bash 02_prepare_package.sh
+          
+      - name: Convert Translation
         run: |
           cd openwrt
-          ./scripts/feeds update -a && ./scripts/feeds install -a
+          /bin/bash 03_convert_translation.sh
+      - name: Remove Upx
+        run: |
+          cd openwrt
+          /bin/bash 04_remove_upx.sh
+      - name: Add ACL
+        run: |
+          cd openwrt
+          /bin/bash 05_create_acl_for_luci.sh -a
+      - name: Make Config
+        run: |
+          cd openwrt
+          mv ../SEED/config_no_docker.seed .config
           make defconfig
-          make download -j8
-          make -j$(($(nproc) + 1)) -s
+          chmod -R 755 ./
+      - name: Make Download
+        run: |
+          df -h
+          cd openwrt
+          make download -j10
+      - name: Make Toolchain
+        run: |
+          df -h
+          cd openwrt
+          let make_process=$(nproc)+1
+          make toolchain/install -j${make_process} V=s
+      - name: Compile Openwrt
+        run: |
+          df -h
+          cd openwrt
+          let make_process=$(nproc)+1
+          make -j${make_process} V=s || make -j${make_process} V=s || make -j1 V=s
+      - name: Cleaning
+        run: |
+          df -h
+          cd openwrt/bin/targets/rockchip/armv8
+          /bin/bash ../../../../../SCRIPTS/06_cleaning.sh
+      
       - name: Assemble Artifact
         id: assemble_artifact
         run: |
