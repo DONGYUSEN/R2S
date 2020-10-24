@@ -58,10 +58,12 @@ jobs:
       - name: Load custom configuration
         run: |
           [ -e files ] && mv files openwrt/files
-          #[ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P2_SH
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+          chmod +x $DIY_SH_1
           cd openwrt
-          $GITHUB_WORKSPACE/$DIY_P2_SH
+          ../$DIY_SH_1
+          make defconfig
+          chmod -R 755 ./
       - name: SSH connection to Actions
         uses: P3TERX/debugger-action@main
         if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
@@ -69,8 +71,6 @@ jobs:
         run: |
           df -h
           cd openwrt
-          make defconfig
-          chmod -R 755 ./
           make download -j10
       - name: Make Toolchain
         run: |
