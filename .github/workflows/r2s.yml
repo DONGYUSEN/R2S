@@ -83,9 +83,13 @@ jobs:
       - name: Assemble Artifact
         id: assemble_artifact
         run: |
-          #gzip openwrt/bin/targets/*/*/*img*
-          mv openwrt/bin/targets/*/*/*ext4*img.gz ./artifact.img.gz
-          release_tag="R2S-native-$(date +%Y-%m-%d)-dev"
+          rm -rf ./artifact/
+          mkdir -p ./artifact/
+          cp openwrt/bin/targets/rockchip/armv8/*squashfs-sysupgrade.img.gz ./artifact/
+          cd openwrt
+          cd ..
+          zip -r artifact.zip ./artifact/
+          release_tag="R2S-GC404-$(date +%Y-%m-%d)"
           echo "##[set-output name=release_tag;]$release_tag"
       - name: Create Release
         id: create_release
