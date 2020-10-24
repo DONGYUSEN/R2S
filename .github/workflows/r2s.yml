@@ -29,7 +29,9 @@ jobs:
 
       - name: Clone Source
         run: |
-          git clone https://github.com/QiuSimons/R2S-OpenWrt/blob/master/SCRIPTS/01_get_ready.sh
+          sudo chown -R runner:runner /home/runner/work/R2S-OpenWrt
+          cp -r ./SCRIPTS/. ./
+          /bin/bash 01_get_ready.sh
           
       - name: Setup Configuration
         run: |
