@@ -93,7 +93,8 @@ sed -i '/;;/i\set_interface_core 1 "ff150000" "ff150000.i2c"' target/linux/rockc
 # RNGD
 sed -i 's/-f/-f -i/g' feeds/packages/utils/rng-tools/files/rngd.init
 # swap LAN WAN
-git apply ../PATCH/swap-LAN-WAN.patch
+sed -i 's,"eth1" "eth0","eth0" "eth1",g' target/linux/rockchip/armv8/base-files/etc/board.d/02_network
+sed -i "s,'eth1' 'eth0','eth0' 'eth1',g" target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 
 ### 4. 更新部分软件包 ###
 # AdGuard
