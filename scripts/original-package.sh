@@ -209,11 +209,6 @@ git clone -b main https://github.com/kongfl888/openwrt-dns2socks.git $leanpack/d
 # add openclash
 git clone -b master https://github.com/vernesong/OpenClash.git
 cd OpenClash/luci-app-openclash
-sed -i 's/\"services\"/\"vpn\"/g' ./luasrc/controller/openclash.lua
-grep -rnl '\"services\",' ./luasrc/openclash |xargs sed -i 's/\"services\",/\"vpn\",/g'  || echo ""
-grep -rnl 'admin\/services\/' ./luasrc/openclash |xargs sed -i 's/admin\/services\//admin\/vpn\//g'  || echo ""
-grep -rnl '\"services\",' ./luasrc/view/openclash |xargs sed -i 's/\"services\",/\"vpn\",/g'  || echo ""
-grep -rnl 'admin\/services\/' ./luasrc/view/openclash |xargs sed -i 's/admin\/services\//admin\/vpn\//g' || echo ""
 cd ../../
 cp -rf OpenClash/luci-app-openclash $wrtpackage
 cd friendlywrt-rk3328/friendlywrt/package/base-files/files
