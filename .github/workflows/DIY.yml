@@ -7,11 +7,11 @@ on:
       - '.github/workflows/DIY.yml'
   #schedule:
     #- cron: '10 08 * * *'
-  env:
-    CONFIG_FILE: .config
-    DIY_P1_SH: diy-part1.sh
-    DIY_P2_SH: diy-part2.sh
-    SSH_ACTIONS: true
+    env:
+      CONFIG_FILE: .config
+      DIY_P1_SH: diy-part1.sh
+      DIY_P2_SH: diy-part2.sh
+      SSH_ACTIONS: true
 
 jobs:
 
