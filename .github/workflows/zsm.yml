@@ -38,13 +38,6 @@ jobs:
           cd openwrt
           cp -r ../SCRIPTS/. ./
           /bin/bash 0_prepare_package.sh
-          
-      - name: Patch For R2S
-        run: |
-          . ./scripts/patch_for_r2s.sh 4
-      - name: Patch For kernel 5.4
-        run: |
-          . ./scripts/patch_for_r2s_5.4.sh 1
 
       - name: Convert Translation
         run: |
@@ -101,7 +94,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.sec_token }}
         with:
           tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
-          release_name: r2s 测试 zsm ${{ steps.assemble_artifact.outputs.release_tag }}
+          release_name: r2s ZSM ${{ steps.assemble_artifact.outputs.release_tag }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
