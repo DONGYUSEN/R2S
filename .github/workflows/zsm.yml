@@ -91,6 +91,11 @@ jobs:
           zip -r artifact.zip ./artifact/
           release_tag="R2S-GC404-$(date +%Y-%m-%d)"
           echo "##[set-output name=release_tag;]$release_tag"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM
+          path: ./artifact.zip
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
