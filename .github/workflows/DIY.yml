@@ -8,7 +8,7 @@ on:
   #schedule:
     #- cron: '10 08 * * *'
 env:
-  REPO_URL: https:
+  #REPO_URL: https:
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
