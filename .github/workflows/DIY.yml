@@ -54,8 +54,8 @@ jobs:
         run: |
           cd openwrt
           mv ../SEED/config_no_docker.seed .config
-          make defconfig
-          chmod -R 755 ./
+          #make defconfig
+          #chmod -R 755 ./
       - name: Load custom configuration
         run: |
           [ -e files ] && mv files openwrt/files
@@ -70,6 +70,8 @@ jobs:
         run: |
           df -h
           cd openwrt
+          make defconfig
+          chmod -R 755 ./
           make download -j10
       - name: Make Toolchain
         run: |
