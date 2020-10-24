@@ -29,7 +29,7 @@ jobs:
 
       - name: Clone Source
         run: |
-          sudo chown -R runner:runner /home/runner/work/R2S-OpenWrt
+          sudo chown -R runner:runner /home/runner/work/R2S
           cp -r ./SCRIPTS/. ./
           /bin/bash 01_get_ready.sh
           
