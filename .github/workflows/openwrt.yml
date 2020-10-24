@@ -1,0 +1,102 @@
+name: r2s openwet固件(测试)
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/openwrt.yml'
+  schedule:
+    - cron: '10 08 * * *'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    if: github.repository == 'zming66/R2S'
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          ref: master
+
+      - name: Initialization Environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: . 1_initialization_environment.sh
+
+      - name: Clone Source
+        run: |
+          mkdir friendlywrt-rk3328
+          cd friendlywrt-rk3328
+          repo init -u https://github.com/kongfl888/friendlywrt_manifests -b master -m rk3328.xml --repo-url=https://github.com/friendlyarm/repo  --no-clone-bundle
+          #rm -f .repo/manifests/rk3328.xml
+          #cp ../JUNK/rk3328.xml .repo/manifests/rk3328.xml
+          repo sync -c  --no-clone-bundle
+      
+      - name: Patch For R2S
+        run: |
+          . ./scripts/patch_for_r2s.sh 4
+      - name: Patch For kernel 5.4
+        run: |
+          . ./scripts/patch_for_r2s_5.4.sh 1
+      
+      - name: Setup Configuration
+        run: |
+          cd openwrt
+          echo 'CONFIG_TARGET_rockchip=y
+          CONFIG_TARGET_rockchip_armv8=y
+          CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
+          CONFIG_PACKAGE_kmod-rtl8821cu=y' > .config
+          cat ../base_rk3328.seed >> .config
+          cat ../minimal_config.seed >> .config
+          echo -e 'CONFIG_PACKAGE_kmod-mt7601u=y\n' >> .config
+          sed -i 's/option input\t\tREJECT/option input\t\tACCEPT/' package/network/config/firewall/files/firewall.config
+          echo -e '\nDYC Build\n' >> package/lean/default-settings/files/openwrt_banner
+      
+      - name: Update Feeds
+        run: |
+          cd friendlywrt-rk3328/friendlywrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+      - name: Update package
+        run: |
+          git clone -b openwrt-19.07 --single-branch https://github.com/project-openwrt/openwrt.git
+          . ./scripts/original-package.sh 34
+      
+      - name: Compile
+        run: |
+          cd openwrt
+          ./scripts/feeds update -a && ./scripts/feeds install -a
+          make defconfig
+          make download -j8
+          make -j$(($(nproc) + 1)) -s
+      - name: Assemble Artifact
+        id: assemble_artifact
+        run: |
+          #gzip openwrt/bin/targets/*/*/*img*
+          mv openwrt/bin/targets/*/*/*ext4*img.gz ./artifact.img.gz
+          release_tag="R2S-native-$(date +%Y-%m-%d)-dev"
+          echo "##[set-output name=release_tag;]$release_tag"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.sec_token }}
+        with:
+          tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
+          release_name: r2s openwrt 测试 ${{ steps.assemble_artifact.outputs.release_tag }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.sec_token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./artifact.img.gz
+          asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-sd.img.gz
+          asset_content_type: application/gzip
