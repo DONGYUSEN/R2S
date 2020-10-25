@@ -1,0 +1,151 @@
+
+
+name: R2S-DIY测试
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '.github/workflows/测试.yml'
+    repository_dispatch:
+    workflow_dispatch:
+      inputs:
+        ssh:
+          description: 'SSH connection to Actions'
+          required: false
+          default: 'false'
+  #schedule:
+    #- cron: '10 08 * * *'
+env:
+  #REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+  FEEDS_CONF: feeds.conf.default
+  CONFIG_FILE: .config
+  DIY_P1_SH: diy-part1.sh
+  DIY_P2_SH: diy-part2.sh
+  SSH_ACTIONS: true
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: false
+  TZ: Asia/Shanghai
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    if: github.repository == 'zming66/R2S'
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          ref: master
+
+      - name: Initialization Environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: . 1_initialization_environment.sh
+
+      - name: Clone Source
+        run: |
+          sudo chown -R runner:runner /home/runner/work/R2S
+          cp -r ./SCRIPTS/. ./
+          /bin/bash 01_get_ready.sh
+          
+      - name: Prepare Package
+        run: |
+          cd openwrt
+          cp -r ../SCRIPTS/. ./
+          /bin/bash 0_prepare_package.sh
+      - name: Convert Translation
+        run: |
+          cd openwrt
+          /bin/bash 03_convert_translation.sh
+      - name: Remove Upx
+        run: |
+          cd openwrt
+          /bin/bash 04_remove_upx.sh
+      - name: Add ACL
+        run: |
+          cd openwrt
+          /bin/bash 05_create_acl_for_luci.sh -a
+      - name: Make Config
+        run: |
+          cd openwrt
+          mv ../SEED/config_no_docker.seed .config
+          
+      - name: Load custom configuration
+        run: |
+          [ -e files ] && mv files openwrt/files
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+          chmod +x $DIY_P1_SH
+          cd openwrt
+          ../$DIY_P1_SH
+          make defconfig
+          chmod -R 755 ./
+      #- name: SSH connection to Actions
+      #  uses: P3TERX/debugger-action@main
+      #  if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+      - name: Make Download
+        run: |
+          df -h
+          cd openwrt
+          make download -j10
+      - name: Make Toolchain
+        run: |
+          df -h
+          cd openwrt
+          let make_process=$(nproc)+1
+          make toolchain/install -j${make_process} V=s
+      - name: Compile Openwrt
+        run: |
+          df -h
+          cd openwrt
+          let make_process=$(nproc)+1
+          make -j${make_process} V=s || make -j${make_process} V=s || make -j1 V=s
+      - name: Cleaning
+        run: |
+          df -h
+          cd openwrt/bin/targets/rockchip/armv8
+          /bin/bash ../../../../../SCRIPTS/06_cleaning.sh
+      
+      - name: Assemble Artifact
+        id: assemble_artifact
+        run: |
+          rm -rf ./artifact/
+          mkdir -p ./artifact/
+          cp openwrt/bin/targets/rockchip/armv8/*squashfs-sysupgrade.img.gz ./artifact/
+          cd openwrt
+          cd ..
+          zip -r artifact.zip ./artifact/
+          release_tag="R2S-DIY-$(date +%Y-%m-%d)"
+          echo "##[set-output name=release_tag;]$release_tag"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM
+          path: ./artifact.zip
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.sec_token }}
+        with:
+          tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
+          release_name: r2s 测试 ${{ steps.assemble_artifact.outputs.release_tag }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.sec_token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./artifact.zip
+          asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM.zip
+          asset_content_type: application/zip
