@@ -1,4 +1,4 @@
-name: r2s---zsm
+name: r2s-openwrt固件
 
 on:
   push:
@@ -89,7 +89,7 @@ jobs:
           cd openwrt
           cd ..
           zip -r artifact.zip ./artifact/
-          release_tag="R2S-zsm-$(date +%Y-%m-%d)"
+          release_tag="R2S-openwrt-$(date +%Y-%m-%d)"
           echo "##[set-output name=release_tag;]$release_tag"
       - name: Upload Artifact
         uses: actions/upload-artifact@master
@@ -103,7 +103,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.sec_token }}
         with:
           tag_name: ${{ steps.assemble_artifact.outputs.release_tag }}
-          release_name: r2s ZSM ${{ steps.assemble_artifact.outputs.release_tag }}
+          release_name: r2s 原生 ${{ steps.assemble_artifact.outputs.release_tag }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
@@ -113,6 +113,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.sec_token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./artifact.img.gz
-          asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-sd.img.gz
-          asset_content_type: application/gzip
+          asset_path: ./artifact.zip
+          asset_name: ${{ steps.assemble_artifact.outputs.release_tag }}-ROM.zip
+          asset_content_type: application/zip
