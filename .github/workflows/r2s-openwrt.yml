@@ -4,9 +4,9 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/zsm.yml'
-  #schedule:
-    #- cron: '10 08 * * *'
+      - '.github/workflows/r2s-openwrt.yml'
+  schedule:
+    - cron: '10 08 * * *'
 
 jobs:
 
