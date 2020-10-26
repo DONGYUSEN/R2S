@@ -22,4 +22,4 @@ git clone https://github.com/kongfl888/luci-app-wrtbwmon.git      #带宽跟踪�
 git clone https://github.com/kongfl888/luci-app-adguardhome.git   #adguardhome
 git clone https://github.com/kongfl888/luci-theme-argon.git       #界面   make menuconfig #choose LUCI->Theme->Luci-theme-argon 
 git clone https://github.com/kongfl888/luci-app-kcpufreq.git      #CPU性能优化
-#git clone https://github.com/kongfl888/luci-app-koolproxyR.git    #koolproxyR
+
