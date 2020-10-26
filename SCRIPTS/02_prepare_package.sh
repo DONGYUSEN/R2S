@@ -150,9 +150,6 @@ sed -i '/firewall/d' package/luci-app-beardropper/root/etc/uci-defaults/luci-bea
 #luci-app-freq
 svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/luci-app-cpufreq package/lean/luci-app-cpufreq
 patch -p1 < ../PATCH/new/package/luci-app-freq.patch
-#京东签到
-git clone https://github.com/jerrykuku/node-request package/new/node-request
-git clone https://github.com/jerrykuku/luci-app-jd-dailybonus package/new/luci-app-jd-dailybonus
 #arpbind
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-arpbind package/lean/luci-app-arpbind
 #Adbyby
@@ -167,8 +164,6 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/c
 #svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/coremark package/lean/coremark
 #mkdir package/lean/coremark/patches
 #wget -P package/lean/coremark/patches/ https://raw.githubusercontent.com/QiuSimons/Others/master/coremark.patch
-#迅雷快鸟
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-xlnetacc package/lean/luci-app-xlnetacc
 #DDNS
 rm -rf ./feeds/packages/net/ddns-scripts
 rm -rf ./feeds/luci/applications/luci-app-ddns
