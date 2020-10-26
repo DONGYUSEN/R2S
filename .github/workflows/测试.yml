@@ -77,11 +77,15 @@ jobs:
         run: |
           cd openwrt
           mv ../SEED/config_no_docker.seed .config
-      - name: Apply customizations
-        if: env.SKIP_TARGET == '0'
-        run: 
+      - name: Load custom configuration
+        run: |
+          [ -e files ] && mv files openwrt/files
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+          chmod +x $DIY_P1_SH
           cd openwrt
           ../$DIY_P1_SH
+          make defconfig
+          chmod -R 755 ./
       # Allow intermediate customization
       - name: '[Debug/Menuconfig] Wait for SSH connection (timeout 30min)'
         if: env.SKIP_TARGET == '0' && env.OPT_DEBUG == '1' && env.TEST != '1'
@@ -107,11 +111,11 @@ jobs:
         id: mtcompile
         if: env.SKIP_TARGET == '0'
         continue-on-error: true
-        run: scripts/cisteps/build-openwrt/11-compile_multi.sh
+        run: compile_multi.sh
 
       - name: Compile firmware and packages with single threads when failed
         if: env.SKIP_TARGET == '0' && steps.mtcompile.outputs.started == '1' && steps.mtcompile.outputs.status != 'success'
-        run: scripts/cisteps/build-openwrt/12-compile_single.sh
+        run: compile_single.sh
 
       - name: Cleaning
         run: |
