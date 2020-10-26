@@ -77,16 +77,16 @@ jobs:
         run: |
           cd openwrt
           mv ../SEED/config_no_docker.seed .config
-          
-      - name: Load custom configuration
-        run: |
-          [ -e files ] && mv files openwrt/files
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $DIY_P1_SH
-          cd openwrt
-          ../$DIY_P1_SH
-          make defconfig
-          chmod -R 755 ./
+      - name: Apply customizations
+        if: env.SKIP_TARGET == '0'
+        run: scripts/cisteps/build-openwrt/08-customize.sh
+      # Allow intermediate customization
+      - name: '[Debug/Menuconfig] Wait for SSH connection (timeout 30min)'
+        if: env.SKIP_TARGET == '0' && env.OPT_DEBUG == '1' && env.TEST != '1'
+        env:
+          TMATE_DOCKER_CONTAINER: ${{env.BUILDER_CONTAINER_ID}}
+        uses: tete1030/safe-debugger-action@dev
+     
       #- name: SSH connection to Actions
       #  uses: P3TERX/debugger-action@main
       #  if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
@@ -101,12 +101,16 @@ jobs:
           cd openwrt
           let make_process=$(nproc)+1
           make toolchain/install -j${make_process} V=s
-      - name: Compile Openwrt
-        run: |
-          df -h
-          cd openwrt
-          let make_process=$(nproc)+1
-          make -j${make_process} V=s || make -j${make_process} V=s || make -j1 V=s
+      - name: Compile firmware and packages with multiple threads
+        id: mtcompile
+        if: env.SKIP_TARGET == '0'
+        continue-on-error: true
+        run: scripts/cisteps/build-openwrt/11-compile_multi.sh
+
+      - name: Compile firmware and packages with single threads when failed
+        if: env.SKIP_TARGET == '0' && steps.mtcompile.outputs.started == '1' && steps.mtcompile.outputs.status != 'success'
+        run: scripts/cisteps/build-openwrt/12-compile_single.sh
+
       - name: Cleaning
         run: |
           df -h
