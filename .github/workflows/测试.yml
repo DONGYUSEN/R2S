@@ -79,7 +79,9 @@ jobs:
           mv ../SEED/config_no_docker.seed .config
       - name: Apply customizations
         if: env.SKIP_TARGET == '0'
-        run: diy-part1.sh
+        run: 
+          cd openwrt
+          ../$DIY_P1_SH
       # Allow intermediate customization
       - name: '[Debug/Menuconfig] Wait for SSH connection (timeout 30min)'
         if: env.SKIP_TARGET == '0' && env.OPT_DEBUG == '1' && env.TEST != '1'
