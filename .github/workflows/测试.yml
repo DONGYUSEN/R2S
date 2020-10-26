@@ -101,15 +101,12 @@ jobs:
           cd openwrt
           let make_process=$(nproc)+1
           make toolchain/install -j${make_process} V=s
-      - name: Compile firmware and packages with multiple threads
-        id: mtcompile
-        if: env.SKIP_TARGET == '0'
-        continue-on-error: true
-        run: compile_multi.sh
-
-      - name: Compile firmware and packages with single threads when failed
-        if: env.SKIP_TARGET == '0' && steps.mtcompile.outputs.started == '1' && steps.mtcompile.outputs.status != 'success'
-        run: compile_single.sh
+      - name: Compile Openwrt
+        run: |
+          df -h
+          cd openwrt
+          let make_process=$(nproc)+1
+          make -j${make_process} V=s || make -j${make_process} V=s || make -j1 V=s
 
       - name: Cleaning
         run: |
