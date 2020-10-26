@@ -282,7 +282,7 @@ svn co https://github.com/openwrt/packages/trunk/libs/libcap-ng package/libs/lib
 rm -rf ./feeds/packages/utils/collectd
 svn co https://github.com/openwrt/packages/trunk/utils/collectd feeds/packages/utils/collectd
 #kcpufreq CPU性能优化
-git clone -b master --single-branch https://github.com/kongfl888/luci-app-kcpufreq.git $wrtpackage/luci-app-kcpufreq
+git clone -b master --single-branch https://github.com/kongfl888/luci-app-kcpufreq package/lean/luci-app-kcpufreq
 #FullCone模块
 cp -rf ../openwrt-lienol/package/network/fullconenat ./package/network/fullconenat
 #git clone -b master --single-branch https://github.com/QiuSimons/openwrt-fullconenat package/fullconenat
