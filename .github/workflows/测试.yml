@@ -7,8 +7,8 @@ on:
     branches: [ master ]
     paths:
       - '.github/workflows/测试.yml'
-    repository_dispatch:
-    workflow_dispatch:
+  repository_dispatch:
+  workflow_dispatch:
       inputs:
         ssh:
           description: 'SSH connection to Actions'
@@ -86,16 +86,10 @@ jobs:
           ../$DIY_P1_SH
           make defconfig
           chmod -R 755 ./
-      # Allow intermediate customization
-      - name: '[Debug/Menuconfig] Wait for SSH connection (timeout 30min)'
-        if: env.SKIP_TARGET == '0' && env.OPT_DEBUG == '1' && env.TEST != '1'
-        env:
-          TMATE_DOCKER_CONTAINER: ${{env.BUILDER_CONTAINER_ID}}
-        uses: tete1030/safe-debugger-action@dev
-     
-      #- name: SSH connection to Actions
-      #  uses: P3TERX/debugger-action@main
-      #  if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+ 
+      - name: SSH connection to Actions
+        uses: P3TERX/debugger-action@main
+        if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
       - name: Make Download
         run: |
           df -h
