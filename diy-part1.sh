@@ -17,5 +17,5 @@ git clone https://github.com/lisaac/luci-plugin-samba package/luci-plugin-samba 
 git clone https://github.com/destan19/OpenAppFilter package/OpenAppFilter              #上网行为管理
 git clone https://github.com/kongfl888/luci-app-r2sflasher package/luci-app-r2sflasher #r2s图形化刷机
 git clone https://github.com/kongfl888/luci-app-wrtbwmon package/luci-app-wrtbwmon     #带宽跟踪器
-git clone https://github.com/kongfl888/luci-app-kcpufreq package /luci-app-kcpufreq    #CPU性能优化
+git clone https://github.com/kongfl888/luci-app-kcpufreq package/luci-app-kcpufreq    #CPU性能优化
 
