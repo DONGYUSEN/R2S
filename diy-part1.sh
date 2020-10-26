@@ -5,7 +5,7 @@ sed -i 's/192.168.1.1/10.10.10.1/g' package/base-files/files/bin/config_generate
 
 #移除不用软件包
 #rm -rf xxx/xxx/xxx/文件名
-rm -rf lede/package/lean/luci-theme-argon
+#rm -rf openwrt/package/lean/
 
 rm -rf luci-app-chinadns-ng/ && git clone https://github.com/WuSiYu/luci-app-chinadns-ng
 rm -rf openwrt-chinadns-ng/ && git clone https://github.com/pexcn/openwrt-chinadns-ng
