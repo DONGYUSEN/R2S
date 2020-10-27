@@ -152,9 +152,6 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/l
 patch -p1 < ../PATCH/new/package/luci-app-freq.patch
 #arpbind
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-arpbind package/lean/luci-app-arpbind
-#Adbyby
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-adbyby-plus package/lean/luci-app-adbyby-plus
-svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby package/lean/adbyby
 #访问控制
 svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-accesscontrol package/lean/luci-app-accesscontrol
 svn co https://github.com/QiuSimons/Others/trunk/luci-app-control-weburl package/new/luci-app-control-weburl
@@ -164,7 +161,15 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/c
 #svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/coremark package/lean/coremark
 #mkdir package/lean/coremark/patches
 #wget -P package/lean/coremark/patches/ https://raw.githubusercontent.com/QiuSimons/Others/master/coremark.patch
-
+#去广告最新KPR
+svn co https://github.com/cnzd/luci-app-koolproxyR package/luci-app-koolproxyR
+#MiniEAP
+svn co https://github.com/kongfl888/luci-app-minieap package/luci-app-minieap 
+#网络共享
+svn co https://github.com/lisaac/luci-plugin-samba package/luci-plugin-samba
+#chinadns-ng
+git clone https://github.com/pexcn/openwrt-chinadns-ng package/lean/openwrt-chinadns-ng
+git clone https://github.com/WuSiYu/luci-app-chinadns-ng package/luci-app-chinadns-ng
 #DDNS
 rm -rf ./feeds/packages/net/ddns-scripts
 rm -rf ./feeds/luci/applications/luci-app-ddns
