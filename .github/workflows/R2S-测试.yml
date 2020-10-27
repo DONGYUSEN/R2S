@@ -1,11 +1,11 @@
 
-name: R2S测试
+name: R2S-测试版
 
 on:
   push:
     branches: [ master ]
     paths:
-      - '.github/workflows/测试.yml'
+      - '.github/workflows/R2S-测试版.yml'
   repository_dispatch:
   workflow_dispatch:
       inputs:
@@ -76,6 +76,8 @@ jobs:
         run: |
           cd openwrt
           mv ../DIY.config .config
+          make defconfig
+          chmod -R 755 ./
       - name: SSH connection to Actions
         uses: P3TERX/debugger-action@main
         if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
@@ -112,7 +114,7 @@ jobs:
           cd openwrt
           cd ..
           zip -r artifact.zip ./artifact/
-          release_tag="R2S-DIY-$(date +%Y-%m-%d)"
+          release_tag="R2S-测试版-$(date +%Y-%m-%d)"
           echo "##[set-output name=release_tag;]$release_tag"
       - name: Upload Artifact
         uses: actions/upload-artifact@master
