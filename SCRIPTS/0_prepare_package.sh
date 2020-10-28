@@ -162,11 +162,11 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/c
 #mkdir package/lean/coremark/patches
 #wget -P package/lean/coremark/patches/ https://raw.githubusercontent.com/QiuSimons/Others/master/coremark.patch
 #去广告最新KPR
-svn co https://github.com/cnzd/luci-app-koolproxyR package/luci-app-koolproxyR
+svn co https://github.com/cnzd/luci-app-koolproxyR package/lean/luci-app-koolproxyR
 #MiniEAP
-svn co https://github.com/kongfl888/luci-app-minieap package/luci-app-minieap 
+svn co https://github.com/kongfl888/luci-app-minieap packag/leane/luci-app-minieap 
 #网络共享
-svn co https://github.com/lisaac/luci-plugin-samba package/luci-plugin-samba
+svn co https://github.com/lisaac/luci-plugin-samba packag/leane/luci-plugin-samba
 #chinadns-ng
 git clone https://github.com/pexcn/openwrt-chinadns-ng package/lean/openwrt-chinadns-ng
 git clone https://github.com/WuSiYu/luci-app-chinadns-ng package/luci-app-chinadns-ng
