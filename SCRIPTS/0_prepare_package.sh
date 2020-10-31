@@ -164,12 +164,12 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/c
 #去广告最新KPR
 svn co https://github.com/cnzd/luci-app-koolproxyR package/lean/luci-app-koolproxyR
 #MiniEAP
-svn co https://github.com/kongfl888/luci-app-minieap packag/leane/luci-app-minieap 
+svn co https://github.com/kongfl888/luci-app-minieap packag/lean/luci-app-minieap 
 #网络共享
-svn co https://github.com/lisaac/luci-plugin-samba packag/leane/luci-plugin-samba
+svn co https://github.com/lisaac/luci-plugin-samba packag/lean/luci-plugin-samba
 #chinadns-ng
 git clone https://github.com/pexcn/openwrt-chinadns-ng package/lean/openwrt-chinadns-ng
-git clone https://github.com/WuSiYu/luci-app-chinadns-ng package/luci-app-chinadns-ng
+git clone https://github.com/WuSiYu/luci-app-chinadns-ng packag/lean/luci-app-chinadns-ng
 #DDNS
 rm -rf ./feeds/packages/net/ddns-scripts
 rm -rf ./feeds/luci/applications/luci-app-ddns
