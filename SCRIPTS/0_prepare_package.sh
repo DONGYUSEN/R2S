@@ -165,7 +165,8 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/c
 #mkdir package/lean/coremark/patches
 #wget -P package/lean/coremark/patches/ https://raw.githubusercontent.com/QiuSimons/Others/master/coremark.patch
 #去广告最新KPR
-svn co https://github.com/cnzd/luci-app-koolproxyR package/lean/luci-app-koolproxyR
+cd package
+git clone https://github.com/Ameykyl/luci-app-koolproxyR
 #MiniEAP
 git clone https://github.com/kongfl888/openwrt-minieap.git package/minieap
 git clone https://github.com/kongfl888/luci-app-minieap.git
