@@ -167,7 +167,9 @@ svn co https://github.com/project-openwrt/openwrt/branches/master/package/lean/c
 #去广告最新KPR
 svn co https://github.com/cnzd/luci-app-koolproxyR package/lean/luci-app-koolproxyR
 #MiniEAP
-git clone https://github.com/kongfl888/luci-app-minieap packag/lean/luci-app-minieap 
+git clone https://github.com/kongfl888/openwrt-minieap.git package/minieap
+git clone https://github.com/kongfl888/luci-app-minieap.git
+cp -rf luci-app-minieap openwrt/package/lean/
 #网络共享
 svn co https://github.com/lisaac/luci-plugin-samba packag/lean/luci-plugin-samba
 #chinadns-ng
