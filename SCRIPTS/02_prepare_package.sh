@@ -262,25 +262,36 @@ git clone -b master --single-branch https://github.com/vernesong/OpenClash packa
 git clone -b master --single-branch https://github.com/tty228/luci-app-serverchan package/new/luci-app-serverchan
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/utils/iputils package/network/utils/iputils
 #SmartDNS
-svn co https://github.com/pymumu/smartdns/trunk/package/openwrt package/new/smartdns
-git clone -b lede --single-branch https://github.com/pymumu/luci-app-smartdns package/new/luci-app-smartdns/
+cp -rf ../packages-lienol/net/smartdns ./package/new/smartdns
+cp -rf ../luci-lienol/applications/luci-app-smartdns ./package/new/luci-app-smartdns
+sed -i 's,include ../..,include $(TOPDIR)/feeds/luci,g' ./package/new/luci-app-smartdns/Makefile
+#svn co https://github.com/pymumu/smartdns/trunk/package/openwrt package/new/smartdns
+#git clone -b lede --single-branch https://github.com/pymumu/luci-app-smartdns package/new/luci-app-smartdns/
 #上网APP过滤
 git clone -b master --single-branch https://github.com/destan19/OpenAppFilter package/new/OpenAppFilter
 #Docker
 svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman package/luci-app-dockerman
 svn co https://github.com/lisaac/luci-lib-docker/trunk/collections/luci-lib-docker package/luci-lib-docker
-svn co https://github.com/openwrt/packages/trunk/utils/docker-ce package/utils/docker-ce
-svn co https://github.com/openwrt/packages/trunk/utils/cgroupfs-mount package/utils/cgroupfs-mount
-svn co https://github.com/openwrt/packages/trunk/utils/containerd package/utils/containerd
-svn co https://github.com/openwrt/packages/trunk/utils/libnetwork package/utils/libnetwork
-svn co https://github.com/openwrt/packages/trunk/utils/tini package/utils/tini
-svn co https://github.com/openwrt/packages/trunk/utils/runc package/utils/runc
+svn co https://github.com/openwrt/packages/trunk/utils/docker-ce feeds/packages/utils/docker-ce
+ln -sf ../../../feeds/packages/utils/docker-ce ./package/feeds/packages/docker-ce
+svn co https://github.com/openwrt/packages/trunk/utils/cgroupfs-mount feeds/packages/utils/cgroupfs-mount
+ln -sf ../../../feeds/packages/utils/cgroupfs-mount ./package/feeds/packages/cgroupfs-mount
+svn co https://github.com/openwrt/packages/trunk/utils/containerd feeds/packages/utils/containerd
+ln -sf ../../../feeds/packages/utils/containerd ./package/feeds/packages/containerd
+svn co https://github.com/openwrt/packages/trunk/utils/libnetwork feeds/packages/utils/libnetwork
+ln -sf ../../../feeds/packages/utils/libnetwork ./package/feeds/packages/libnetwork
+svn co https://github.com/openwrt/packages/trunk/utils/tini feeds/packages/utils/tini
+ln -sf ../../../feeds/packages/utils/tini ./package/feeds/packages/tini
+svn co https://github.com/openwrt/packages/trunk/utils/runc feeds/packages/utils/runc
+ln -sf ../../../feeds/packages/utils/runc ./package/feeds/packages/runc
 #补全部分依赖（实际上并不会用到
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/utils/fuse package/utils/fuse
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network/services/samba36 package/network/services/samba36
 svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/libs/libconfig package/libs/libconfig
-svn co https://github.com/openwrt/packages/trunk/libs/nghttp2 package/libs/nghttp2
-svn co https://github.com/openwrt/packages/trunk/libs/libcap-ng package/libs/libcap-ng
+svn co https://github.com/openwrt/packages/trunk/libs/nghttp2 feeds/packages/libs/nghttp2
+ln -sf ../../../feeds/packages/libs/nghttp2 ./package/feeds/packages/nghttp2
+svn co https://github.com/openwrt/packages/trunk/libs/libcap-ng feeds/packages/libs/libcap-ng
+ln -sf ../../../feeds/packages/libs/libcap-ng ./package/feeds/packages/libcap-ng
 rm -rf ./feeds/packages/utils/collectd
 svn co https://github.com/openwrt/packages/trunk/utils/collectd feeds/packages/utils/collectd
 #kcpufreq CPU性能优化
